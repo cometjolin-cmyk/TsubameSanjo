@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>燕三條職人工藝品牌轉型報告</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            background-color: #F7F5F2; 
+        }
+        
+        :root {
+            --pantone-olive: #A59C63;    /* 10126 C */
+            --pantone-gold: #AD934E;     /* 10127 C */
+            --pantone-taupe: #A89886;    /* 10136 C */
+            --pantone-clay: #AA8C74;     /* 10137 C */
+        }
+
+        .bg-pantone-olive { background-color: var(--pantone-olive); }
+        .bg-pantone-gold { background-color: var(--pantone-gold); }
+        .bg-pantone-taupe { background-color: var(--pantone-taupe); }
+        .bg-pantone-clay { background-color: var(--pantone-clay); }
+        .text-pantone-gold { color: var(--pantone-gold); }
+        .border-pantone-gold { border-color: var(--pantone-gold); }
+
+        .slide-enter { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .img-gradient { position: relative; }
+        .img-gradient::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0; height: 40%;
+            background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+        }
+    </style>
+</head>
+<body class="text-slate-900 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-stone-200 px-6 py-4 flex justify-between items-center sticky top-0 z-30 shadow-sm">
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-city text-pantone-gold text-xl"></i>
+            <h1 class="font-bold text-lg hidden md:block text-stone-800 tracking-tight">燕三條職人工藝轉型報告</h1>
+        </div>
+        <div id="slide-indicator" class="text-sm font-medium bg-stone-100 px-3 py-1 rounded-full text-stone-500 border border-stone-200">
+            Slide 1 / 15
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="app-viewport" class="flex-1 overflow-auto p-4 md:p-8">
+        <div id="slide-container" class="max-w-6xl mx-auto"></div>
+    </main>
+
+    <!-- Footer Navigation -->
+    <footer class="bg-white border-t border-stone-200 p-4 flex justify-between items-center sticky bottom-0 z-20">
+        <button onclick="prevSlide()" class="flex items-center gap-2 px-4 py-2 text-stone-600 hover:bg-stone-100 rounded-lg transition font-medium">
+            <i class="fa-solid fa-chevron-left"></i> 上一頁
+        </button>
+        <div id="dot-navigation" class="hidden sm:flex gap-2"></div>
+        <button onclick="nextSlide()" class="flex items-center gap-2 px-6 py-2 bg-pantone-gold text-white rounded-lg hover:brightness-110 transition shadow-md font-bold">
+            下一頁 <i class="fa-solid fa-chevron-right"></i>
+        </button>
+    </footer>
+
+    <script>
+        let currentSlide = 0;
+
+        const slides = [
+            {
+                type: 'cover',
+                title: '燕三條職人工藝：工藝特徵與品牌語言',
+                subtitle: '從「技術規格」轉向「標誌性產品」的深度分析',
+                meta: '分析 14 家代表性企業的核心競爭力與視覺美學',
+                image: 'https://images.unsplash.com/photo-1513519245088-0e12902e35ca?auto=format&fit=crop&w=1200&q=80'
+            },
+            // --- 🟥 傳統工藝與頂級生活精品 ---
+            {
+                id: 'gyokusendo',
+                category: '傳統工藝與頂級生活精品',
+                company: '玉川堂 (Gyokusendo)',
+                tagline: '活著的文化財',
+                website: 'https://www.gyokusendo.com/',
+                image: 'https://www.gyokusendo.com/cms/wp-content/themes/gsd_bs_1907-1/img/home/mcont5_202201.jpg',
+                tags: ['無形文化財', '縮口銅壺', '時間的色澤'],
+                business: { what: '手工槌起銅器', who: '高端茶道人士、收藏家', how: '藝術品級定價' },
+                strengths: ['不經焊接的一體成型技術', '專利天然藥劑發色工藝', '十年以上的職人養成制度'],
+                consultant: {
+                    product: '手感槌目茶壺 (Tsuiki Copper Teapot)',
+                    highlight: '透過「縮口 (Kuchishibori)」技術，僅憑敲擊將單一銅片轉化為立體器皿。產品表面如魚鱗般的「槌目」，是職人力量與節奏的視覺化。',
+                    view: '他們不使用化學漆，而是利用自然發色，強調「器物隨使用者成長」。產品特色在於其「時間的色澤」，讓金屬具備了生命的溫度。'
+                }
+            },
+            {
+                id: 'suwada',
+                category: '傳統工藝與頂級生活精品',
+                company: 'SUWADA (諏訪田製作所)',
+                tagline: '鋼鐵的機能美',
+                website: 'https://www.suwada.co.jp/',
+                image: 'https://www.suwada.co.jp/cms/wp-content/uploads/2021/08/0c45260fa1d8223d1089df2c7accd882-360x360.jpg',
+                tags: ['指甲剪勞斯萊斯', '完全不透光', '極簡流線'],
+                business: { what: '頂級指甲護理工具', who: '美甲師、高端消費者', how: '精品化定價與終生保修' },
+                strengths: ['微米級對刃精準度', '資深職人手工鏡面拋光', '全球精品通路合作實績'],
+                consultant: {
+                    product: '全不鏽鋼經典指甲剪 (Nail Nipper Classic)',
+                    highlight: '追求「完全不透光」的對刃精準度。閉合瞬間的嚴絲合縫，直接證明了其微米級的研磨功力。',
+                    view: '產品捨棄複雜結構，改以流線型金屬拋光展現極簡美。其特色在於「切斷而非壓斷」，切開後的指甲斷面平滑如鏡，徹底改變了個人護理的感官體驗。'
+                }
+            },
+            {
+                id: 'tsuboe',
+                category: '傳統工藝與生活精品',
+                company: 'Tsuboe (ツボエ)',
+                tagline: '刃物的微觀藝術',
+                website: 'https://tsuboe.co.jp/',
+                image: 'https://cdn.shopify.com/s/files/1/0503/1588/6746/files/link2_shiro.jpg?v=5253042510840526617',
+                tags: ['本目立て', '廚具精品化', '2026參展'],
+                business: { what: '專業金屬磨泥器', who: '料理長、高端家庭', how: '高端自有品牌與聯名合作' },
+                strengths: ['本目立て（手工鑿齒）機械化重現', '不破壞纖維保留食材鮮甜', '橫跨百年銼刀製造技術'],
+                consultant: {
+                    product: '極上磨泥器 (The Grater)',
+                    highlight: '展示其「本目立て（真磨齒）」的幾何排列。銳利的齒尖不僅是研磨，更是「切開」食材細胞，保留水分。',
+                    view: '品牌習慣以「液體感的成果」（如細膩不辛辣的蘿蔔泥）來證明利度。產品外觀簡約至極，成功將「廚房工具」轉化為「餐桌裝飾品」。'
+                }
+            },
+            // --- 🟧 專業廚刀與餐飲美學 ---
+            {
+                id: 'tojiro',
+                category: '專業廚刀與餐飲美學',
+                company: 'Tojiro (藤次郎)',
+                tagline: '複合鋼材的標竿',
+                website: 'https://tojiro.net/',
+                image: 'https://tojiro.net/2021/wp-content/uploads/2020/12/尾瀬V黒打ちサムネ-724x483.jpg',
+                tags: ['DP系列', '芯材夾鋼', '技術民主化'],
+                business: { what: '專業級廚刀', who: '職業主廚、料理愛好者', how: '技術混合量產與職人手工' },
+                strengths: ['DP法不脫碳處理技術', '高品質 VG10 鋼材應用', '開放式工廠畫廊體驗行銷'],
+                consultant: {
+                    product: 'DP 系列三德刀 (The DP Series)',
+                    highlight: '以「芯材夾鋼」展現鋼材韌性。刀面上的夾層線條（霞），是強韌不鏽鋼保護高硬度鋼芯的視覺證明。',
+                    view: '藤次郎的特色在於「技術民主化」。他們用工業化手段重現職人開刃感，讓高端的「利度」成為大眾消費得起的專業標準。'
+                }
+            },
+            {
+                id: 'shimomura',
+                category: '專業廚刀與餐飲美學',
+                company: '下村工業 (Shimomura Industrial)',
+                tagline: '機能性切削專家',
+                website: 'https://www.shimomura-kogyo.co.jp/',
+                image: 'https://www.shimomura-kogyo.co.jp/media/images/top2020/product_knife.jpg',
+                tags: ['Verdun 系列', '一體成型', '痛點解決'],
+                business: { what: '廚房機能小工具', who: '廣大家庭主婦', how: '多品牌覆蓋與高性價比' },
+                strengths: ['傳承 150 年的刃物研磨底蘊', '高產量下的職人手動調校', '優越的人因工程握把設計'],
+                consultant: {
+                    product: 'Verdun 一體成型不鏽鋼廚刀',
+                    highlight: '透過「無接縫一體化」設計，展現極致的衛生與平衡感。',
+                    view: '下村的特色在於「解決生活微小痛點」。不管是削皮器還是刨絲刀，其產品習慣用「不費力的切削感」來展現其深厚的刃物底蘊。'
+                }
+            },
+            {
+                id: 'bussan',
+                category: '專業廚刀與餐飲美學',
+                company: '燕物產 (Tsubame Bussan)',
+                tagline: '百年西餐具鼻祖',
+                website: 'https://www.tbcljp.com/',
+                image: 'https://image.jimcdn.com/app/cms/image/transf/none/path/s429f0c83f096fef9/image/i853c2e0f4f669036/version/1773912469/image.png',
+                tags: ['日本首家', '皇室紀念款', '口觸感'],
+                business: { what: '高級西餐具', who: '高級飯店、國宴、藏家', how: '文化傳承與高端訂製' },
+                strengths: ['精準的金屬厚薄控制 (Tapering)', '溫潤如銀器的鏡面拋光', '引領日本餐具工業的歷史地位'],
+                consultant: {
+                    product: 'LAX 系列精品餐具',
+                    highlight: '極致的「口觸感 (Mouthfeel)」。透過無數次的邊緣研磨，消除金屬刮舌感，讓餐具在口中幾乎消失。',
+                    view: '其特色在於「經典的延續」。他們不追求花哨，而是透過幾十年不變的優雅弧度，傳達出「日本西餐具起點」的歷史厚重感。'
+                }
+            },
+            {
+                id: 'yamazaki',
+                category: '專業廚刀與餐飲美學',
+                company: '山崎金屬工業 (Yamazaki Kinzoku Kogyo)',
+                tagline: '國宴級奢華',
+                website: 'https://www.yamazakitableware.co.jp/',
+                image: 'https://www.yamazakitableware.co.jp/cms/wp/wp-content/themes/yamazaki/images/lineup/yamaco_img_01.jpg',
+                tags: ['諾貝爾獎晚宴', '黑鏡面', '三維拋光'],
+                business: { what: '國際精品餐具', who: '外交官、皇室、頂級婚慶', how: '高單價精品授權策略' },
+                strengths: ['獨家黑亮感鏡面研磨技術', '諾貝爾獎唯一指定合作品牌', '高端鈦金屬離子鍍膜應用'],
+                consultant: {
+                    product: '諾貝爾獎晚宴餐具 (Nobel Collection)',
+                    highlight: '複雜的三維曲面拋光與黑鏡面 (Black Mirror) 處理。',
+                    view: '他們習慣用「極致對稱與光影折射」來展現身價。產品不僅是餐具，更像是在光線下不斷變化的金屬雕塑，展現燕三條與國際外交接軌的高級感。'
+                }
+            },
+            {
+                id: 'sekikawa',
+                category: '專業廚刀與餐飲美學',
+                company: 'Sekikawa (関川製作所)',
+                tagline: '物理特性的應用家',
+                website: 'https://idea-sekikawa.co.jp/',
+                image: 'http://x0q.22b.myftpupload.com/wp-content/uploads/2020/05/スクロール%E3%80%80横%E3%80%80新-min.png',
+                tags: ['熱傳導', '體溫融化', '科學感性'],
+                business: { what: '機能餐廚生活精品', who: '甜點愛好者、禮品市場', how: '物理原理轉化的高溢價' },
+                strengths: ['鋁合金導熱率應用的先鋒', '細膩的手工鏡面拋光工法', '靈活的小量多樣開發能力'],
+                consultant: {
+                    product: '熱傳導冰淇淋匙',
+                    highlight: '利用鋁合金的高導熱率，將手溫瞬間傳遞至匙尖。',
+                    view: '其特色在於「科學感性化」。不談物理公式，而是用「體溫融化堅硬冰淇淋」的神奇瞬間，來展現金屬加工的趣味性與機能性。'
+                }
+            },
+            // --- 🟨 專業工具與職人器材 ---
+            {
+                id: 'takagi',
+                category: '專業工具與職人器材',
+                company: 'Takagi (高儀)',
+                tagline: '整合與供應鏈之王',
+                website: 'https://www.takagi-plc.co.jp/',
+                image: 'https://storage.googleapis.com/studio-design-asset-files/projects/8dO8Z7X5an/s-1260x908_v-fms_webp_1971c58e-dceb-4113-bc6c-c0eee4081199.webp',
+                tags: ['10萬件品項', '衝擊淬火', '產業節點'],
+                business: { what: '建築工具與 DIY 工具整合', who: '建築職人、修繕愛好者', how: '自有品牌與批發通路' },
+                strengths: ['燕三條最大規模的供應鏈整合力', '傳承百年的鋸齒研磨技術', '多元品牌的市場覆蓋策略'],
+                consultant: {
+                    product: 'Shark Saw 專業鋸子',
+                    highlight: '透過「衝擊淬火」技術產生的黑色刀齒，象徵著極高的耐用度與切削效率。',
+                    view: '高儀的特色在於其「廣度」。它代表了燕三條 200 家工廠的整合力，產品展現的是一種「職人工具超市」的專業信賴感。'
+                }
+            },
+            {
+                id: 'kakuri',
+                category: '專業工具與職人器材',
+                company: 'KAKURI (角利製作所)',
+                tagline: '木工溫度的傳遞者',
+                website: 'https://www.kakuri.co.jp/',
+                image: 'https://kakuritools.com/cdn/shop/files/DSCF0061_01_01_01_01_720x.jpg?v=1761538829',
+                tags: ['替刃式', 'EVA 聯名', '跨界生活'],
+                business: { what: '木工刃物與戶外刀具', who: '學校教材、露營愛好者', how: '教育市場與 IP 品牌經營' },
+                strengths: ['替刃式（可換刃）結構引領者', '木工工藝與現代場景的跨界力', '日本教育體系的高市佔率'],
+                consultant: {
+                    product: '替刃式細工鉋刀',
+                    highlight: '將深奧的磨刀技術簡化為「可更換式刀片」，降低專業工具的進入門檻。',
+                    view: '角利的特色是「場景跨界」。他們將木工工藝帶入防災、動漫（EVA 聯名）與戶外領域，讓手作的溫度走進現代潮流。'
+                }
+            },
+            {
+                id: 'threepeaks',
+                category: '專業工具與職人器材',
+                company: '3.peaks (スリーピークス技研)',
+                tagline: '人因工程的極致',
+                website: 'https://www.3peaks.co.jp/',
+                image: 'https://www.3peaks.co.jp/hand-made/assets/images/mv.webp',
+                tags: ['閉合不透光', '自動回彈', '手部延伸'],
+                business: { what: '專業手動鉗類工具', who: '電子組裝技師、金工師', how: '高端利基市場與回購策略' },
+                strengths: ['極致精密的刃部對齊精度', '減輕疲勞的獨家彈簧機構', '針對特定細分市場的研發力'],
+                consultant: {
+                    product: '模型/精密加工專用尖嘴鉗',
+                    highlight: '鉗端咬合精準到能夾起薄紙。手柄的「自動回彈彈簧」力道經過精密計算，減少長時間使用的疲勞。',
+                    view: '其特色在於「細膩的關懷」。針對不同手形、不同力量的使用者設計工具，體現「工具是手的延伸」這一核心哲學。'
+                }
+            },
+            {
+                id: 'anex',
+                category: '專業工具與職人器材',
+                company: 'Anex (兼子製作所)',
+                tagline: '緊固技術的先驅',
+                website: 'https://www.anextool.co.jp/',
+                image:'https://cdn1.cybassets.com/media/W1siZiIsIjE1NTU0L3Byb2R1Y3RzLzM4NjY2NDU4LzE2NjgwNjgzNjdfZjhhMGQ3NGVmNDI0MGFmNTk5NTIuanBlZyJdLFsicCIsInRodW1iIiwiNjAweDYwMCJdXQ.jpeg?sha=3059d68a0415c30d',                 
+                tags: ['黑龍系列', '色彩識別', '解決方案'],
+                business: { what: '專業螺絲起子與配件', who: '水電技師、3C 維修員', how: '耗材策略與專利授權' },
+                strengths: ['高硬度與韌性平衡的專利熱處理', '解決滑牙問題的獨門刃部噴砂', '世界級最齊全的起子品項'],
+                consultant: {
+                    product: '黑龍系列高韌性起子頭 (Impact Bits)',
+                    highlight: '獨家的熱處理技術讓金屬具備「扭力緩衝區」，在高強度衝擊下不輕易斷裂。',
+                    view: 'Anex 的特色產品習慣用「鮮艷的識別色（橘/綠）」結合專業性能。他們在解決「螺絲生鏽、滑牙」等極端問題上，展現了無可取代的專業解題能力。'
+                }
+            },
+            {
+                id: 'top',
+                category: '專業工具與職人器材',
+                company: 'TOP (トップ工業)',
+                tagline: '力量與安全的平衡',
+                website: 'https://www.toptools.co.jp/',
+                image: 'https://scontent-tpe1-1.xx.fbcdn.net/v/t39.30808-6/481822502_122213629094194252_7029014279616822396_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=13d280&_nc_ohc=kDkwS7VSt7MQ7kNvwHGsq4F&_nc_oc=Adp3ZXbppjEY4o9W7n9sHcgc1UsTatxgViwJQs-0IIrEYi8uw-KzJm76oqIXnWj99mM&_nc_zt=23&_nc_ht=scontent-tpe1-1.xx&_nc_gid=7xHEJzdltnB-TlzVcDtAWg&_nc_ss=7a3a8&oh=00_Af1UyIz6kK4-JrinorPdyd5jOrSw0N4CHhnrQqXvQKV4zg&oe=69D7CED9',
+                tags: ['世界最薄', '安全防墜', '工業權威'],
+                business: { what: '活動扳手與扭力工具', who: '電力、建築鋼構技師', how: '數位精密量測設備獲利' },
+                strengths: ['零晃動活動扳手的研發先驅', '極窄空間適用的薄型化專利', '建築級安全防墜整合結構'],
+                consultant: {
+                    product: '薄型輕量活動扳手',
+                    highlight: '在維持極高強度的前提下，將扳手頭部做到「世界最薄」，以應對狹窄空間。',
+                    view: 'TOP 的特色在於「硬核的安全感」。針對高空作業設計的防掉落結構，展現出對建築職人生命安全的高度責任感。'
+                }
+            },
+            // --- 🟦 戶外與生活風格 ---
+            {
+                id: 'village',
+                category: '戶外與生活風格',
+                company: 'Village Blacksmith (村之鍛冶屋)',
+                tagline: '露營美學的鋼鐵骨氣',
+                website: 'https://www.muranokajiya.jp/',
+                image: 'https://muranokajiya.itembox.cloud/item/slider3.jpg?t=20260404111511',
+                tags: ['橢圓營釘', '繽紛電著', '降維打擊'],
+                business: { what: '風格露營五金開發', who: '露營愛好者、生活選物店', how: 'D2C 社群行銷與粉絲經濟' },
+                strengths: ['解決營釘自轉問題的橢圓結構', '極速回應市場需求的 D2C 能力', '精準的社群內容行銷與粉絲經營'],
+                consultant: {
+                    product: '橢圓鍛造營釘 (Ellisse Stake)',
+                    highlight: '改變傳統圓形營釘，採用橢圓截面。這項細微的設計改變，讓營釘在地表下不自轉，且轉向即可拔起。',
+                    view: '他們的特色產品習慣用「繽紛的電著塗裝」來包裹堅硬的鍛造鋼。這種「柔與剛」的對比，成功讓生硬的建築五金變成了令人渴望的露營精品。'
+                }
+            }
+        ];
+
+        function renderSlide() {
+            const container = document.getElementById('slide-container');
+            const indicator = document.getElementById('slide-indicator');
+            const data = slides[currentSlide];
+            
+            indicator.innerText = `Slide ${currentSlide + 1} / ${slides.length}`;
+            
+            if (data.type === 'cover') {
+                container.innerHTML = `
+                    <div class="rounded-3xl p-12 text-white h-[600px] flex flex-col justify-center items-center text-center shadow-2xl relative overflow-hidden bg-stone-900 slide-enter">
+                        <img src="${data.image}" class="absolute inset-0 w-full h-full object-cover opacity-30" alt="Cover">
+                        <div class="absolute inset-0 bg-gradient-to-br from-stone-800/80 to-stone-900/40"></div>
+                        <h2 class="text-4xl md:text-6xl font-extrabold mb-6 relative z-10 leading-tight">${data.title}</h2>
+                        <p class="text-xl md:text-2xl text-stone-300 mb-8 relative z-10 font-light">${data.subtitle}</p>
+                        <div class="bg-white/10 backdrop-blur-md px-6 py-3 rounded-xl border border-white/20 relative z-10 text-stone-100">${data.meta}</div>
+                        <button onclick="nextSlide()" class="mt-12 bg-pantone-gold text-white px-10 py-4 rounded-full font-bold flex items-center gap-3 hover:brightness-110 transition shadow-lg relative z-10">開始閱讀報告 <i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 slide-enter">
+                        <div class="lg:col-span-8 space-y-6">
+                            <div class="w-full h-64 md:h-80 rounded-3xl overflow-hidden shadow-md img-gradient border border-stone-200">
+                                <img src="${data.image}" class="w-full h-full object-cover" alt="${data.company}" onerror="this.src='https://via.placeholder.com/800x400?text=Image+Not+Found'">
+                            </div>
+
+                            <div class="bg-pantone-gold text-white rounded-3xl p-8 shadow-lg relative overflow-hidden">
+                                <div class="absolute -right-10 -top-10 text-white/10 rotate-12"><i class="fa-solid fa-building text-[200px]"></i></div>
+                                <div class="relative z-10">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div class="flex flex-col gap-1">
+                                            <span class="text-xs font-bold uppercase bg-stone-900/20 px-3 py-1 rounded-full border border-white/20 w-fit">${data.category}</span>
+                                            <span class="text-sm opacity-90 ml-1">創業：${data.established}</span>
+                                        </div>
+                                        ${data.website ? `<a href="${data.website}" target="_blank" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition backdrop-blur-sm border border-white/30">官方網站 <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>` : ''}
+                                    </div>
+                                    <h2 class="text-3xl font-bold mb-2">${data.company}</h2>
+                                    <p class="text-xl text-stone-100 mb-6 italic font-light">「${data.tagline}」</p>
+                                    <div class="flex flex-wrap gap-2 mb-6">${data.tags.map(tag => `<span class="bg-white/20 text-xs px-2 py-1 rounded-md border border-white/30 backdrop-blur-sm">#${tag}</span>`).join('')}</div>
+                                    <div class="bg-black/10 p-4 rounded-xl border border-white/10 flex gap-3"><i class="fa-solid fa-circle-info shrink-0 mt-1"></i><p class="text-sm leading-relaxed">${data.overview}</p></div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="bg-stone-100 border border-stone-200 p-6 rounded-2xl"><div class="flex items-center gap-2 mb-3 text-stone-700 font-bold"><i class="fa-solid fa-layer-group text-pantone-olive"></i><h3>業務內容</h3></div><p class="text-sm text-stone-600 leading-relaxed">${data.business.what}</p></div>
+                                <div class="bg-stone-100 border border-stone-200 p-6 rounded-2xl"><div class="flex items-center gap-2 mb-3 text-stone-700 font-bold"><i class="fa-solid fa-bullseye text-pantone-gold"></i><h3>關鍵客群</h3></div><p class="text-sm text-stone-600 leading-relaxed">${data.business.who}</p></div>
+                                <div class="bg-stone-100 border border-stone-200 p-6 rounded-2xl"><div class="flex items-center gap-2 mb-3 text-stone-700 font-bold"><i class="fa-solid fa-coins text-pantone-clay"></i><h3>收益模式</h3></div><p class="text-sm text-stone-600 leading-relaxed">${data.business.how}</p></div>
+                            </div>
+
+                            <div class="bg-white border border-stone-200 p-8 rounded-2xl border-l-8 border-l-pantone-olive shadow-sm">
+                                <div class="flex items-center gap-2 mb-6 text-stone-800 font-bold"><i class="fa-solid fa-medal text-pantone-olive"></i><h3>特色與競爭力</h3></div>
+                                <ul class="space-y-4">
+                                    ${data.strengths.map((str, idx) => `<li class="flex gap-4 text-stone-700 items-start"><span class="shrink-0 w-6 h-6 bg-stone-50 border border-stone-200 rounded-full flex items-center justify-center text-xs font-bold text-pantone-olive">${idx + 1}</span><span class="leading-relaxed font-medium">${str}</span></li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="lg:col-span-4 h-full">
+                            <div class="bg-stone-50 border border-stone-200 p-6 rounded-3xl shadow-inner flex flex-col h-full sticky top-24">
+                                <div class="flex items-center gap-2 mb-6 text-stone-800 font-bold"><i class="fa-solid fa-pen-nib text-pantone-olive text-xl"></i><h3 class="text-xl">深層建議</h3></div>
+                                <div class="space-y-4 flex-1">
+                                    <div class="p-5 bg-white rounded-2xl border border-stone-200 shadow-sm border-l-4 border-l-pantone-olive">
+                                        <h4 class="text-xs font-black uppercase text-pantone-olive mb-3 flex items-center gap-1"><i class="fa-solid fa-star"></i> 特色產品</h4>
+                                        <p class="text-sm text-stone-800 font-bold leading-relaxed mb-1">${data.consultant.product}</p>
+                                    </div>
+                                    <div class="p-5 bg-stone-100 rounded-2xl border border-stone-200 shadow-sm">
+                                        <h4 class="text-xs font-black uppercase text-pantone-gold mb-3 flex items-center gap-1"><i class="fa-solid fa-eye"></i> 工藝亮點</h4>
+                                        <p class="text-sm text-stone-700 leading-relaxed">${data.consultant.highlight}</p>
+                                    </div>
+                                    <div class="p-5 bg-stone-800 rounded-2xl border border-stone-700 shadow-lg text-stone-100">
+                                        <h4 class="text-xs font-black uppercase text-pantone-gold mb-3 flex items-center gap-1"><i class="fa-solid fa-quote-left"></i> 公司特點</h4>
+                                        <p class="text-sm leading-relaxed text-stone-200 font-light">${data.consultant.view}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            renderDots();
+        }
+
+        function renderDots() {
+            const dots = document.getElementById('dot-navigation');
+            dots.innerHTML = slides.map((_, idx) => `
+                <button onclick="goToSlide(${idx})" class="w-3 h-3 rounded-full transition-all duration-300 ${currentSlide === idx ? 'bg-pantone-gold w-8' : 'bg-stone-300 hover:bg-stone-400'}"></button>
+            `).join('');
+        }
+
+        function nextSlide() { currentSlide = (currentSlide + 1) % slides.length; renderSlide(); }
+        function prevSlide() { currentSlide = (currentSlide - 1 + slides.length) % slides.length; renderSlide(); }
+        function goToSlide(idx) { currentSlide = idx; renderSlide(); }
+
+        window.onload = renderSlide;
+    </script>
+</body>
+</html>
